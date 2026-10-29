@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: FedMaintain Backend
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+server:
+  port: 0
+
+security:
+  jwt:
+    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    expiration: 3600000
+
+app:
+  admin:
+    email: admin@fedmaintain.com
+    password: Admin@123
+    name: FedMaintain Admin
+
+mqtt:
+  broker-url: tcp://localhost:1883
+  client-id: fedmaintain-backend-test
+  topic-prefix: fedmaintain
+
+telemetry:
+  offline-threshold-seconds: 30
+
+simulator:
+  enabled: false
+  publish-interval-ms: 1000
+  operating-mode: NORMAL
+
+ml:
+  model-artifacts-dir: target/test-artifacts/rul
+  prediction:
+    scheduled-enabled: false
+    schedule-ms: 60000
+  rul:
+    thresholds:
+      normal-hours: 72.0
+      watch-hours: 24.0
+      warning-hours: 8.0
+
+health-score:
+  vibration-weight: 0.30
+  temperature-weight: 0.20
+  current-weight: 0.15
+  pressure-weight: 0.10
+  rpm-weight: 0.10
+  rul-weight: 0.15
+
+federated:
+  model-artifacts-dir: target/test-artifacts/federated
+  minimum-clients: 2
+
+management:
+  endpoint:
+    health:
+      show-details: always
