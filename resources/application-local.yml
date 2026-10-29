@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: FedMaintain Backend
+  datasource:
+    url: jdbc:h2:file:./data/fedmaintain_local;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE
+    driver-class-name: org.h2.Driver
+    username: fedmaintain_user
+    password: fedmaintain_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+server:
+  port: ${BACKEND_PORT:8080}
+  error:
+    include-stacktrace: never
+
+mqtt:
+  broker-url: ${MQTT_BROKER_URL:tcp://localhost:1883}
+  client-id: ${MQTT_CLIENT_ID:fedmaintain-backend-local}
+  topic-prefix: fedmaintain
+
+telemetry:
+  offline-threshold-seconds: 60
+
+simulator:
+  enabled: ${SIMULATOR_ENABLED:true}
+  publish-interval-ms: 2000
+  operating-mode: NORMAL
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  health:
+    db:
+      enabled: true

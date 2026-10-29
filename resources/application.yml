@@ -1,0 +1,112 @@
+spring:
+  application:
+    name: FedMaintain Backend
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:fedmaintain}
+    username: ${POSTGRES_USER:fedmaintain_user}
+    password: ${POSTGRES_PASSWORD:fedmaintain_secure_pass_2026!}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 5
+      maximum-pool-size: 15
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: ${BACKEND_PORT:8080}
+  error:
+    include-stacktrace: never
+
+# Security Configuration
+security:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    expiration: ${JWT_EXPIRATION:86400000} # 24 hours in ms
+
+# Initial Admin Bootstrap Configuration
+app:
+  admin:
+    email: ${ADMIN_EMAIL:admin@fedmaintain.com}
+    password: ${ADMIN_PASSWORD:Admin@123}
+    name: ${ADMIN_NAME:FedMaintain Admin}
+
+# MQTT & Telemetry Configuration
+mqtt:
+  broker-url: ${MQTT_BROKER_URL:tcp://localhost:1883}
+  client-id: ${MQTT_CLIENT_ID:fedmaintain-backend}
+  topic-prefix: fedmaintain
+
+telemetry:
+  offline-threshold-seconds: ${SENSOR_OFFLINE_THRESHOLD_SECONDS:30}
+
+# Telemetry Simulator Configuration
+simulator:
+  enabled: ${SIMULATOR_ENABLED:true}
+  publish-interval-ms: ${SIMULATOR_INTERVAL_MS:2000}
+  operating-mode: ${SIMULATOR_MODE:NORMAL}
+
+# ML & Remaining Useful Life (RUL) Prediction Configuration
+ml:
+  model-artifacts-dir: ${ML_MODEL_ARTIFACTS_DIR:model-artifacts/rul}
+  prediction:
+    scheduled-enabled: ${ML_PREDICTION_SCHEDULED:true}
+    schedule-ms: ${ML_PREDICTION_SCHEDULE_MS:300000} # every 5 min
+  rul:
+    thresholds:
+      normal-hours: 72.0
+      watch-hours: 24.0
+      warning-hours: 8.0
+
+# Prototype Multi-Criteria Machine Health Score Weights
+health-score:
+  vibration-weight: 0.30
+  temperature-weight: 0.20
+  current-weight: 0.15
+  pressure-weight: 0.10
+  rpm-weight: 0.10
+  rul-weight: 0.15
+
+# Privacy-Preserving Federated Learning Configuration
+federated:
+  model-artifacts-dir: ${FEDERATED_MODEL_ARTIFACTS_DIR:model-artifacts/federated}
+  minimum-clients: ${FEDERATED_MINIMUM_CLIENTS:2}
+
+# Phase 9: Digital Twin Operational Configuration
+fedmaintain:
+  digitaltwin:
+    sync-enabled: ${DIGITALTWIN_SYNC_ENABLED:true}
+    sync-interval-ms: ${DIGITALTWIN_SYNC_INTERVAL_MS:60000}
+    offline-timeout-seconds: ${DIGITALTWIN_OFFLINE_TIMEOUT_SECONDS:60}
+    history-interval-minutes: ${DIGITALTWIN_HISTORY_INTERVAL_MINUTES:5}
+    state:
+      critical-rul-hours: 24.0
+      warning-rul-hours: 72.0
+      critical-health-score: 40.0
+      warning-health-score: 60.0
+      degrading-health-score: 80.0
+      failure-health-score: 20.0
+
+# Actuator Health & Metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    db:
+      enabled: true
